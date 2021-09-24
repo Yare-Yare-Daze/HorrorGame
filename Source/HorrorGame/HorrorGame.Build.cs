@@ -14,7 +14,8 @@ public class HorrorGame : ModuleRules
 		
 		PublicIncludePaths.AddRange(new string[]
 		{
-			"HorrorGame/Public/Player"
+			"HorrorGame/Public/Player",
+			"HorrorGame/Public/Components"
 		});
 
 		// Uncomment if you are using Slate UI

@@ -2,11 +2,14 @@
 
 
 #include "Player/HGPlayerCharacter.h"
+
+#include "HGCharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
-AHGPlayerCharacter::AHGPlayerCharacter()
+AHGPlayerCharacter::AHGPlayerCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UHGCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,18 +45,35 @@ void AHGPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHGPlayerCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &AHGPlayerCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("TurnAround", this, &AHGPlayerCharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AHGPlayerCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AHGPlayerCharacter::Jump);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AHGPlayerCharacter::OnStartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &AHGPlayerCharacter::OnFinishRunning);
 
 }
 
 void AHGPlayerCharacter::MoveForward(float Axis)
 {
 	if(Axis == 0.0f) return;
+	IsMovingForward = true;
 	AddMovementInput(GetActorForwardVector(), Axis);
 }
 void AHGPlayerCharacter::MoveRight(float Axis)
 {
 	if(Axis == 0.0f) return;
 	AddMovementInput(GetActorRightVector(), Axis);
+}
+
+void AHGPlayerCharacter::OnStartRunning()
+{
+	WantsToRun = true;
+}
+void AHGPlayerCharacter::OnFinishRunning()
+{
+	WantsToRun = false;
+}
+
+bool AHGPlayerCharacter::IsRunning() const
+{
+	return WantsToRun && IsMovingForward && !GetVelocity().IsZero();
 }
 

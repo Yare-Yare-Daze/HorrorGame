@@ -16,7 +16,7 @@ class HORRORGAME_API AHGPlayerCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	AHGPlayerCharacter();
+	AHGPlayerCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,9 +35,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category="Movement")
+	bool IsRunning() const;
+
 private:
+	bool WantsToRun = false;
+	bool IsMovingForward = false;
 	void MoveForward(float Axis);
 	void MoveRight(float Axis);
 	
-
+	void OnStartRunning();
+	void OnFinishRunning();
 };
