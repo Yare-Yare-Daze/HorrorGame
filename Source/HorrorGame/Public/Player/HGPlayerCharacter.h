@@ -7,6 +7,7 @@
 #include "HGPlayerCharacter.generated.h"
 
 class UCameraComponent;
+class USpringArmComponent;
 
 UCLASS()
 class HORRORGAME_API AHGPlayerCharacter : public ACharacter
@@ -23,6 +24,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
 	UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="Components")
+	USpringArmComponent* SpringArmComponent;
 
 public:	
 	// Called every frame
